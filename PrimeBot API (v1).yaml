@@ -1,0 +1,557 @@
+openapi: 3.0.3
+info:
+  title: PrimeBot API
+  version: 1.0.0 (v1)
+  description: Provides information about teams, players and matches of the Techniker
+    Prime League.
+paths:
+  /api/v1/matches/:
+    get:
+      operationId: v1_matches_list
+      parameters:
+      - in: query
+        name: closed
+        schema:
+          type: boolean
+      - in: query
+        name: enemy_team
+        schema:
+          type: integer
+      - in: query
+        name: has_side_choice
+        schema:
+          type: boolean
+      - in: query
+        name: match_begin_confirmed
+        schema:
+          type: boolean
+      - in: query
+        name: match_day
+        schema:
+          type: integer
+      - in: query
+        name: match_type
+        schema:
+          type: string
+          nullable: true
+          enum:
+          - group
+          - league
+          - playoff
+        description: |-
+          * `group` - Kalibrierung
+          * `league` - Gruppenphase
+          * `playoff` - Playoffs
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: query
+        name: result
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: team
+        schema:
+          type: integer
+      - in: query
+        name: team_made_latest_suggestion
+        schema:
+          type: boolean
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMatchList'
+          description: ''
+  /api/v1/matches/{id}/:
+    get:
+      operationId: v1_matches_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Match.
+        required: true
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchDetail'
+          description: ''
+  /api/v1/matches/by-match-id/:
+    get:
+      operationId: v1_matches_by_match_id_retrieve
+      parameters:
+      - in: query
+        name: match_id
+        schema:
+          type: integer
+        required: true
+      - in: query
+        name: team_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Match'
+          description: ''
+  /api/v1/teams/:
+    get:
+      operationId: v1_teams_list
+      parameters:
+      - in: query
+        name: division
+        schema:
+          type: string
+      - in: query
+        name: name
+        schema:
+          type: string
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: team_tag
+        schema:
+          type: string
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTeamList'
+          description: ''
+  /api/v1/teams/{id}/:
+    get:
+      operationId: v1_teams_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Team.
+        required: true
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamDetail'
+          description: ''
+components:
+  schemas:
+    BlankEnum:
+      enum:
+      - ''
+    EnemyTeam:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          nullable: true
+          maxLength: 100
+        prime_league_link:
+          type: string
+          readOnly: true
+        team_tag:
+          type: string
+          nullable: true
+          maxLength: 100
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - id
+      - prime_league_link
+      - updated_at
+    Match:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        match_id:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        prime_league_link:
+          type: string
+          readOnly: true
+        result:
+          type: string
+          nullable: true
+          maxLength: 5
+        team:
+          $ref: '#/components/schemas/TeamForMatch'
+        enemy_team:
+          $ref: '#/components/schemas/TeamForMatch'
+      required:
+      - enemy_team
+      - id
+      - match_id
+      - prime_league_link
+      - team
+    MatchDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        match_id:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        begin:
+          type: string
+          format: date-time
+          nullable: true
+        result:
+          type: string
+          nullable: true
+          maxLength: 5
+        prime_league_link:
+          type: string
+          readOnly: true
+        match_day:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+        match_type:
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/MatchTypeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        team_lineup:
+          type: array
+          items:
+            $ref: '#/components/schemas/Player'
+        enemy_lineup:
+          type: array
+          items:
+            $ref: '#/components/schemas/Player'
+        team:
+          $ref: '#/components/schemas/TeamForMatch'
+        enemy_team:
+          $ref: '#/components/schemas/TeamForMatch'
+      required:
+      - enemy_lineup
+      - enemy_team
+      - id
+      - match_id
+      - prime_league_link
+      - team
+      - team_lineup
+    MatchForTeamDetails:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        match_id:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        prime_league_link:
+          type: string
+          readOnly: true
+        begin:
+          type: string
+          format: date-time
+          nullable: true
+        result:
+          type: string
+          nullable: true
+          maxLength: 5
+        match_day:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+        match_type:
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/MatchTypeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        enemy_team:
+          $ref: '#/components/schemas/EnemyTeam'
+        team_lineup:
+          type: array
+          items:
+            $ref: '#/components/schemas/Player'
+        enemy_lineup:
+          type: array
+          items:
+            $ref: '#/components/schemas/Player'
+      required:
+      - enemy_lineup
+      - enemy_team
+      - id
+      - match_id
+      - prime_league_link
+      - team_lineup
+      - updated_at
+    MatchTypeEnum:
+      enum:
+      - group
+      - league
+      - playoff
+      type: string
+      description: |-
+        * `group` - Kalibrierung
+        * `league` - Gruppenphase
+        * `playoff` - Playoffs
+    NullEnum:
+      enum:
+      - null
+    PaginatedMatchList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Match'
+    PaginatedTeamList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Team'
+    Player:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        summoner_name:
+          type: string
+          nullable: true
+          maxLength: 30
+        name:
+          type: string
+          maxLength: 50
+        is_leader:
+          type: boolean
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - id
+      - name
+      - updated_at
+    Team:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          nullable: true
+          maxLength: 100
+        team_tag:
+          type: string
+          nullable: true
+          maxLength: 100
+        prime_league_link:
+          type: string
+          readOnly: true
+        matches_count:
+          type: integer
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - id
+      - matches_count
+      - prime_league_link
+      - updated_at
+    TeamDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        team_tag:
+          type: string
+          nullable: true
+          maxLength: 100
+        name:
+          type: string
+          nullable: true
+          maxLength: 100
+        prime_league_link:
+          type: string
+          readOnly: true
+        division:
+          type: string
+          nullable: true
+          maxLength: 20
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        logo_url:
+          type: string
+          format: uri
+          nullable: true
+          maxLength: 1000
+        players:
+          type: array
+          items:
+            $ref: '#/components/schemas/Player'
+        matches:
+          type: array
+          items:
+            $ref: '#/components/schemas/MatchForTeamDetails'
+      required:
+      - id
+      - matches
+      - players
+      - prime_league_link
+      - updated_at
+    TeamForMatch:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          nullable: true
+          maxLength: 100
+        team_tag:
+          type: string
+          nullable: true
+          maxLength: 100
+        prime_league_link:
+          type: string
+          readOnly: true
+        logo_url:
+          type: string
+          format: uri
+          nullable: true
+          maxLength: 1000
+      required:
+      - id
+      - prime_league_link
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
