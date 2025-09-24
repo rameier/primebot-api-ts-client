@@ -21,7 +21,7 @@ export class BaseApiClient {
   private userAgent: string;
 
   constructor(config: ApiClientConfig = {}) {
-    this.baseUrl = config.baseUrl || 'https://api.primebot.de';
+    this.baseUrl = config.baseUrl || 'https://primebot.me/api/v1';
     this.auth = config.auth || new NoAuth();
     this.timeout = config.timeout || 30000;
     this.userAgent = config.userAgent || 'PrimeBot-TS-Client/1.0.0';
