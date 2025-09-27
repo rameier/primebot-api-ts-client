@@ -1,4 +1,4 @@
-import { PrimeBotApiClient, AuthProvider, NoAuth } from '../index';
+import { PrimeBotApiClient, NoAuth } from '../index';
 
 describe('PrimeBotApiClient', () => {
   let client: PrimeBotApiClient;

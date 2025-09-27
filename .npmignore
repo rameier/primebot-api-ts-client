@@ -1,0 +1,41 @@
+# Source files
+src/
+examples/
+
+# Configuration files
+.eslintrc.json
+.prettierrc.json
+tsconfig.json
+jest.config.js
+
+# Development files
+*.test.ts
+*.spec.ts
+**/__tests__/
+
+# Build artifacts
+*.tgz
+coverage/
+
+# Environment files
+.env*
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# API spec (optional - you might want to include this)
+*.yaml
+*.yml
