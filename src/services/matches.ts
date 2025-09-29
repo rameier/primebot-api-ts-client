@@ -1,5 +1,5 @@
 import { BaseApiClient } from '../client/base';
-import {
+import type {
   Match,
   MatchDetail,
   PaginatedMatchList,

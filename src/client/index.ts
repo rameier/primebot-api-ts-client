@@ -1,4 +1,4 @@
-import { ApiClientConfig } from './base';
+import type { ApiClientConfig } from './base';
 import { MatchesService } from '../services/matches';
 import { TeamsService } from '../services/teams';
 import { BasicAuth, CookieAuth } from '../auth';

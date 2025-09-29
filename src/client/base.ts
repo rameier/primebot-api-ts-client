@@ -1,4 +1,5 @@
-import { AuthProvider, NoAuth } from '../auth';
+import type { AuthProvider } from '../auth';
+import { NoAuth } from '../auth';
 import {
   PrimeBotApiError,
   AuthenticationError,

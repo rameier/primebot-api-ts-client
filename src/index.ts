@@ -9,7 +9,8 @@ export { TeamsService } from './services/teams';
 export * from './types';
 
 // Authentication
-export { AuthProvider, NoAuth, BasicAuth, CookieAuth } from './auth';
+export type { AuthProvider} from './auth';
+export { NoAuth, BasicAuth, CookieAuth } from './auth';
 
 // Errors
 export {
@@ -21,7 +22,7 @@ export {
 } from './errors';
 
 // Client configuration
-export { ApiClientConfig } from './client/base';
+export type { ApiClientConfig } from './client/base';
 
 // Re-export for convenience
 export { PrimeBotApiClient as default } from './client';

@@ -12,3 +12,4 @@ coverage/
 Thumbs.db
 *.tgz
 *.tar.gz
+.idea
