@@ -24,8 +24,9 @@ export class TeamsService extends BaseApiClient {
     const allTeams: Team[] = [];
     let page = 1;
     let hasMore = true;
+    const MAX_PAGES = 1000;
 
-    while (hasMore) {
+    while (hasMore && page <= MAX_PAGES) {
       const response = await this.listTeams({ ...params, page });
       allTeams.push(...response.results);
 

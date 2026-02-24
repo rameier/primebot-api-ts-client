@@ -13,3 +13,4 @@ Thumbs.db
 *.tgz
 *.tar.gz
 .idea
+.claude/settings.local.json

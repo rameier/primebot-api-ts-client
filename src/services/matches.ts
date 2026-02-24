@@ -38,8 +38,9 @@ export class MatchesService extends BaseApiClient {
     const allMatches: Match[] = [];
     let page = 1;
     let hasMore = true;
+    const MAX_PAGES = 1000;
 
-    while (hasMore) {
+    while (hasMore && page <= MAX_PAGES) {
       const response = await this.listMatches({ ...params, page });
       allMatches.push(...response.results);
 
