@@ -1,5 +1,5 @@
 import { BaseApiClient } from '../client/base';
-import { Team, TeamDetail, PaginatedTeamList, TeamsQueryParams } from '../types';
+import type { Team, TeamDetail, PaginatedTeamList, TeamsQueryParams } from '../types';
 
 export class TeamsService extends BaseApiClient {
   /**
