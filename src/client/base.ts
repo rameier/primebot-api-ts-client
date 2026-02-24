@@ -30,6 +30,12 @@ export class BaseApiClient {
   protected async request<T>(path: string, options: RequestInit = {}): Promise<T> {
     const url = new URL(path, this.baseUrl);
 
+    // Prevent SSRF: ensure the resolved URL stays on the expected origin
+    const expectedOrigin = new URL(this.baseUrl).origin;
+    if (url.origin !== expectedOrigin) {
+      throw new ValidationError(`Invalid request path: URL origin mismatch`);
+    }
+
     const headers = {
       'Content-Type': 'application/json',
       'User-Agent': this.userAgent,
@@ -115,6 +121,12 @@ export class BaseApiClient {
 
   protected buildUrl(path: string, params?: Record<string, any>): string {
     const url = new URL(path, this.baseUrl);
+
+    // Prevent SSRF: ensure the resolved URL stays on the expected origin
+    const expectedOrigin = new URL(this.baseUrl).origin;
+    if (url.origin !== expectedOrigin) {
+      throw new ValidationError(`Invalid request path: URL origin mismatch`);
+    }
 
     if (params) {
       Object.entries(params).forEach(([key, value]) => {
